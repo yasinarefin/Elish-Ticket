@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class BusStructure(models.Model):
-    BusModel = models.CharField(max_length=20, default=None, null=False)
+    BusModel = models.CharField(primary_key = True, max_length=20, default=None, null=False)
     HasAc = models.BooleanField(null=False)
     seatStructure = models.JSONField()
 
@@ -11,12 +11,9 @@ class BusStructure(models.Model):
 
 
 class Bus(models.Model):
-    BusNumber = models.CharField(max_length=10, default=None, null=False)
+    BusNumber = models.CharField(primary_key= True, max_length=10, default=None, null=False)
     CoachNo = models.CharField(max_length=10, default=None, null=True)
     Active = models.BooleanField(default=True, null=False)
-    Price = models.DecimalField(
-        max_digits=5, decimal_places=2, default=None, null=False
-    )
     BusStructure = models.ForeignKey(BusStructure, on_delete=models.CASCADE)
 
 
@@ -32,3 +29,12 @@ class BusSchedule(models.Model):
     Schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
     StartCity = models.CharField(max_length=20, default=None, null=False)
     EndCity = models.CharField(max_length=20, default=None, null=False)
+    Price = models.DecimalField(
+        max_digits=5, decimal_places=2, default=None, null=False
+    )
+    Class = models.CharField(max_length=20, default=None, null=False) # economoy or
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['StartCity', 'EndCity']),
+        ]
